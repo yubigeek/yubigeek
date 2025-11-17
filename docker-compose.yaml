@@ -62,21 +62,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
-  varnish:
-    image: 'varnish:7.5'
-    ports:
-      - '80:80'
-    environment:
-      - VARNISH_SIZE=256M
-    command: [ "-p", "default_ttl=3600", "-p", "default_grace=3600" ]
-    depends_on:
-      - wordpress
-    restart: always
-    healthcheck:
-      test: [ "CMD", "varnishstat", "-1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
 volumes:
   wordpress-files:
     driver: local
