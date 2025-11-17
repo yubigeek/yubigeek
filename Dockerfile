@@ -3,29 +3,28 @@ FROM php:8.3-fpm
 
 # Install system dependencies and PHP extensions
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    nginx \
-    supervisor \
-    curl \
-    gnupg2 \
-    ca-certificates \
-    zip unzip \
-    libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libonig-dev \
-    libxml2-dev \
-    libicu-dev \
-    procps \
- && docker-php-ext-configure gd --with-jpeg --with-freetype \
- && docker-php-ext-install -j$(nproc) \
-    pdo_mysql mysqli mbstring exif intl xml zip gd opcache \
- && pecl install redis || true \
- && docker-php-ext-enable redis || true \
- && apt-get remove -y --purge libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
- && apt-get autoremove -y \
- && rm -rf /var/lib/apt/lists/*
+   && apt-get install -y --no-install-recommends \
+   nginx \
+   supervisor \
+   curl \
+   gnupg2 \
+   ca-certificates \
+   zip unzip \
+   libzip-dev \
+   libpng-dev \
+   libjpeg-dev \
+   libfreetype6-dev \
+   libonig-dev \
+   libxml2-dev \
+   libicu-dev \
+   procps \
+   && docker-php-ext-configure gd --with-jpeg --with-freetype \
+   && docker-php-ext-install -j$(nproc) \
+   pdo_mysql mysqli mbstring exif intl xml zip gd opcache \
+   && pecl install redis || true \
+   && docker-php-ext-enable redis || true \
+   && apt-get autoremove -y \
+   && rm -rf /var/lib/apt/lists/*
 
 # Working directory
 WORKDIR /var/www/html
