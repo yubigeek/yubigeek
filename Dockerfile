@@ -17,12 +17,14 @@ RUN apt-get update \
    libonig-dev \
    libxml2-dev \
    libicu-dev \
+   libmagickwand-dev \
    procps \
    && docker-php-ext-configure gd --with-jpeg --with-freetype \
-   && docker-php-ext-install -j$(nproc) \
-   pdo_mysql mysqli mbstring exif intl xml zip gd opcache \
-   && pecl install redis || true \
-   && docker-php-ext-enable redis || true \
+   && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring exif intl xml zip gd opcache \
+   && pecl install redis \
+   && docker-php-ext-enable redis \
+   && pecl install imagick \
+   && docker-php-ext-enable imagick \
    && apt-get autoremove -y \
    && rm -rf /var/lib/apt/lists/*
 
