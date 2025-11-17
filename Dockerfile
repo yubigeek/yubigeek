@@ -41,6 +41,9 @@ COPY .docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# Copy custom wp-config for Docker
+COPY .wordpress/wp-config-docker.php /var/www/html/wp-config-docker.php
+
 # Expose port 80
 EXPOSE 80
 
