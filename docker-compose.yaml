@@ -64,8 +64,6 @@ services:
       retries: 10
   varnish:
     image: 'varnish:7.5'
-    volumes:
-      - '.docker/varnish/default.vcl:/etc/varnish/default.vcl:ro'
     ports:
       - '80:80'
     environment:

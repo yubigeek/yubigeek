@@ -40,6 +40,7 @@ COPY .docker/nginx/wordpress.conf /etc/nginx/conf.d/default.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY .docker/varnish/default.vcl /etc/varnish/default.vcl
 
 # Expose port 80
 EXPOSE 80
