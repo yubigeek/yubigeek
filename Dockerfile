@@ -42,13 +42,20 @@ COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Copy custom wp-config for Docker
-COPY .wordpress/wp-config-docker.php /var/www/html/wp-config-docker.php
+COPY .wordpress/wp-config-docker.php /tmp/wp-config-docker.php
+
+# Create entrypoint script
+COPY .docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose port 80
 EXPOSE 80
 
 # Set up health check
 HEALTHCHECK --interval=10s --timeout=5s --retries=3 CMD curl -f http://127.0.0.1/ || exit 1
+
+# Use entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Start Supervisord to manage Nginx and PHP-FPM
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
