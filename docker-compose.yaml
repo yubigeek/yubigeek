@@ -18,7 +18,7 @@ services:
       - WORDPRESS_SECURE_AUTH_SALT=$WP_SECURE_AUTH_SALT
       - WORDPRESS_LOGGED_IN_SALT=$WP_LOGGED_IN_SALT
       - WORDPRESS_NONCE_SALT=$WP_NONCE_SALT
-      - WORDPRESS_CONFIG_EXTRA=define('DISABLE_WP_CRON', true);define('WP_POST_REVISIONS', 10);define('WP_MEMORY_LIMIT', '512M');define('FS_METHOD','direct');define('DISALLOW_FILE_MODS',false);define('DISALLOW_FILE_EDIT',true);define('WP_AUTO_UPDATE_CORE',true);
+      - WORDPRESS_CONFIG_EXTRA=define('DISABLE_WP_CRON', true);define('WP_POST_REVISIONS', 10);define('WP_MEMORY_LIMIT', '512M');define('FS_METHOD','direct');define('DISALLOW_FILE_MODS',false);define('DISALLOW_FILE_EDIT',true);define('WP_AUTO_UPDATE_CORE',true);define('WP_REDIS_HOST','redis');define('WP_REDIS_PORT',6379);define('WP_CACHE',true);
       - SMTP_HOST=$SMTP_HOST
       - SMTP_PORT=$SMTP_PORT
       - SMTP_AUTH=$SMTP_AUTH
@@ -28,6 +28,7 @@ services:
       - SMTP_FROMNAME=$SMTP_FROMNAME
     depends_on:
       - mariadb
+      - redis
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1"]
@@ -49,8 +50,20 @@ services:
       interval: 5s
       timeout: 20s
       retries: 10
+  redis:
+    image: 'redis:7-alpine'
+    volumes:
+      - 'redis-data:/data'
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 volumes:
   wordpress-files:
     driver: local
   mariadb-data:
+    driver: local
+  redis-data:
     driver: local
