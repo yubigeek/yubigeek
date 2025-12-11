@@ -39,6 +39,7 @@ RUN rm -f /etc/nginx/conf.d/* /etc/nginx/sites-enabled/* /etc/nginx/sites-availa
 
 # Copy custom configuration files from .docker directory
 COPY .docker/nginx/wordpress.conf /etc/nginx/conf.d/default.conf
+COPY .docker/nginx/security.conf /etc/nginx/conf.d/security.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
