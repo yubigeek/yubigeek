@@ -37,12 +37,23 @@ RUN chown -R www-data:www-data /var/www/html
 # Remove default Nginx configuration and add custom configurations
 RUN rm -f /etc/nginx/conf.d/* /etc/nginx/sites-enabled/* /etc/nginx/sites-available/*
 
+# Copy WordPress Nginx configuration
+COPY .docker/nginx/wordpress.conf /etc/nginx/conf.d/site-available/wordpress.conf
+RUN ln -s /etc/nginx/conf.d/site-available/wordpress.conf /etc/nginx/conf.d/site-enabled/default.conf
+
 # Copy custom configuration files from .docker directory
-COPY .docker/nginx/wordpress.conf /etc/nginx/conf.d/default.conf
-COPY .docker/nginx/security.conf /etc/nginx/conf.d/security.conf
+COPY .docker/nginx/directives.conf /etc/nginx/conf.d/01-directives.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+COPY .docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Create cache directory for Nginx FastCGI cache
+RUN mkdir -p /var/cache/nginx && chown -R www-data:www-data /var/cache/nginx
+
+# Copy optimization script
+COPY .docker/optimize-wordpress.sh /usr/local/bin/optimize-wordpress.sh
+RUN chmod +x /usr/local/bin/optimize-wordpress.sh
 
 # Copy custom wp-config for Docker
 COPY .wordpress/wp-config-docker.php /tmp/wp-config-docker.php
