@@ -56,10 +56,6 @@ COPY .docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 # Create cache directory for Nginx FastCGI cache
 RUN mkdir -p /var/cache/nginx && chown -R www-data:www-data /var/cache/nginx
 
-# Copy optimization script
-COPY .docker/optimize-wordpress.sh /usr/local/bin/optimize-wordpress.sh
-RUN chmod +x /usr/local/bin/optimize-wordpress.sh
-
 # Copy custom wp-config for Docker
 COPY .wordpress/wp-config-docker.php /tmp/wp-config-docker.php
 
