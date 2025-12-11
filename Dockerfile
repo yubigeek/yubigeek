@@ -43,8 +43,8 @@ RUN chown -R www-data:www-data /var/www/html
 RUN rm -f /etc/nginx/conf.d/* /etc/nginx/sites-enabled/* /etc/nginx/sites-available/*
 
 # Copy WordPress Nginx configuration
-COPY .docker/nginx/wordpress.conf /etc/nginx/site-available/wordpress.conf
-RUN ln -s /etc/nginx/site-available/wordpress.conf /etc/nginx/site-enabled/default.conf
+COPY .docker/nginx/wordpress.conf /etc/nginx/sites-available/wordpress.conf
+RUN ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/default.conf
 
 # Copy custom configuration files from .docker directory
 COPY .docker/nginx/directives.conf /etc/nginx/conf.d/01-directives.conf
