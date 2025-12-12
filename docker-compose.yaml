@@ -10,6 +10,7 @@ services:
       - WORDPRESS_DB_NAME=$MYSQL_DATABASE
       - WORDPRESS_DB_USER=$MYSQL_USER
       - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_PORT=$MYSQL_PORT
       - WORDPRESS_AUTH_KEY=$WP_AUTH_KEY
       - WORDPRESS_SECURE_AUTH_KEY=$WP_SECURE_AUTH_KEY
       - WORDPRESS_LOGGED_IN_KEY=$WP_LOGGED_IN_KEY
@@ -18,48 +19,13 @@ services:
       - WORDPRESS_SECURE_AUTH_SALT=$WP_SECURE_AUTH_SALT
       - WORDPRESS_LOGGED_IN_SALT=$WP_LOGGED_IN_SALT
       - WORDPRESS_NONCE_SALT=$WP_NONCE_SALT
-      - WORDPRESS_CONFIG_EXTRA=define('WP_CACHE', true);define('DISABLE_WP_CRON', true);define('WP_POST_REVISIONS', 10);define('WP_MEMORY_LIMIT', '512M');define('FS_METHOD','direct');define('DISALLOW_FILE_MODS',false);define('DISALLOW_FILE_EDIT',true);define('WP_AUTO_UPDATE_CORE',true);define('WP_REDIS_HOST','redis');define('WP_REDIS_PORT',6379);define('SMTP_HOST','$SMTP_HOST');define('SMTP_PORT','$SMTP_PORT');define('SMTP_AUTH','$SMTP_AUTH');define('SMTP_USER','$SMTP_USER');define('SMTP_PASS','$SMTP_PASS');define('SMTP_FROM','$SMTP_FROM');define('SMTP_FROMNAME','$SMTP_FROMNAME');
-    depends_on:
-      - mariadb
-      - redis
+      - WORDPRESS_CONFIG_EXTRA=define('WP_CACHE', true);define('DISABLE_WP_CRON', true);define('WP_POST_REVISIONS', 10);define('WP_MEMORY_LIMIT', '512M');define('FS_METHOD','direct');define('DISALLOW_FILE_MODS',false);define('DISALLOW_FILE_EDIT',true);define('WP_AUTO_UPDATE_CORE',true);define('WP_REDIS_HOST','$REDIS_HOST');define('WP_REDIS_PORT','$REDIS_PORT');define('WP_REDIS_USERNAME','$REDIS_USERNAME');define('WP_REDIS_DATABASE','$REDIS_DATABASE');define('WP_REDIS_PASSWORD','$REDIS_PASSWORD');define('SMTP_HOST','$SMTP_HOST');define('SMTP_PORT','$SMTP_PORT');define('SMTP_AUTH','$SMTP_AUTH');define('SMTP_USER','$SMTP_USER');define('SMTP_PASS','$SMTP_PASS');define('SMTP_FROM','$SMTP_FROM');define('SMTP_FROMNAME','$SMTP_FROMNAME');
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://127.0.0.1" ]
       interval: 5s
       timeout: 10s
       retries: 10
-  mariadb:
-    image: 'mariadb:11'
-    volumes:
-      - 'mariadb-data:/var/lib/mysql'
-    environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=1
-      - MYSQL_DATABASE=$MYSQL_DATABASE
-      - MYSQL_USER=$MYSQL_USER
-      - MYSQL_PASSWORD=$MYSQL_PASSWORD
-    ports:
-      - '3308:3306'
-    restart: always
-    healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER} -p${MYSQL_PASSWORD} || exit 1" ]
-      interval: 5s
-      timeout: 20s
-      retries: 10
-  redis:
-    image: 'redis:7-alpine'
-    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru --save "" --appendonly no --tcp-backlog 511 --timeout 0 --tcp-keepalive 300
-    volumes:
-      - 'redis-data:/data'
-    restart: always
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
 volumes:
   wordpress-files:
-    driver: local
-  mariadb-data:
-    driver: local
-  redis-data:
     driver: local
