@@ -47,7 +47,7 @@ COPY .docker/nginx/wordpress.conf /etc/nginx/sites-available/wordpress.conf
 RUN ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/default.conf
 
 # Copy custom configuration files from .docker directory
-COPY .docker/nginx/directives.conf /etc/nginx/conf.d/01-directives.conf
+COPY .docker/nginx/headers.conf /etc/nginx/conf.d/01-headers.conf
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 COPY .docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
 COPY .docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
