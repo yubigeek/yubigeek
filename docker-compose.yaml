@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    cap_add:
+      - SYS_PTRACE
     volumes:
       - 'wordpress-files:/var/www/html'
     environment:
